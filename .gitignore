@@ -1,0 +1,17 @@
+# Compiled object files
+*.o
+
+# Compiled binary files
+http_server
+
+# Backup files
+*~
+
+# Debug files
+*.log
+
+# Directories
+/build/
+
+.vscode
+
