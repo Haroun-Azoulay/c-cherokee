@@ -1,0 +1,39 @@
+@startuml
+skinparam sequence {
+    LifeLineBorderColor black
+    LifeLineBackgroundColor #99CCFF
+    ParticipantBorderColor black
+    ParticipantBackgroundColor #99CCFF
+    SequenceGroupBorderColor black
+    SequenceGroupBackgroundColor #99CCFF
+}
+
+participant Server
+participant "Thread" as Thread
+
+Client -> Server: Connection (client_socket)
+Server -> Server: Accept connection (new_socket)
+Server -> Thread: Create and detach thread (new_socket)
+group GET request
+    Thread -> Thread: Read request (GET, new_socket)
+    Thread -> Thread: Process request (synchronous, new_socket)
+    Thread -> Client: Send response (new_socket)
+end
+group POST request
+    Thread -> Thread: Read request (POST, new_socket)
+    Thread -> Thread: Process request (synchronous, new_socket)
+    Thread -> Client: Send response (new_socket)
+end
+group PUT request
+    Thread -> Thread: Read request (PUT, new_socket)
+    Thread -> Thread: Process request (synchronous, new_socket)
+    Thread -> Client: Send response (new_socket)
+end
+group DELETE request
+    Thread -> Thread: Read request (DELETE, new_socket)
+    Thread -> Thread: Process request (synchronous, new_socket)
+    Thread -> Client: Send response (new_socket)
+end
+Thread -> Thread: Close connection and free memory (new_socket)
+Client -> Client: Receive response (client_socket)
+@enduml
