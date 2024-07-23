@@ -50,7 +50,7 @@ You can use the following commands:
 curl http://localhost:8080/index.html
 ```
 
-- Header request to retrieve only the headers of index.html
+- HEADER request to retrieve only the headers of index.html
 
 ```bash
 curl -I http://localhost:8080/index.html
