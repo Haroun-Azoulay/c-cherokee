@@ -1,4 +1,4 @@
-# <p align="center">Cherokee-Http server c++</p>
+# <p align="center">Cherokee - Http server c++</p>
   
 Project of master is to implement a server conforming to a simplified version of the HTTP protocol on C++.
 
@@ -53,7 +53,7 @@ curl -X POST -d 'This is some data' http://localhost:8080/data.txt
 curl -X PUT -d 'This is updated data' http://localhost:8080/data.txt
 ```
 
-DELETE request to remove data.txt
+- DELETE request to remove data.txt
 ```bash
 curl -X DELETE http://localhost:8080/data.txt
 ```
@@ -96,7 +96,7 @@ curl -X DELETE http://localhost:8080/data.txt
         "shortest_transaction":                 0.00
 ```
 
-#### Post file txt - 100 users - 1min
+#### POST file txt - 100 users - 1min
 
 `siege -c 50 -t 1M 'http://localhost:8080/test.txt POST "test dummy"'`
 ```
@@ -114,7 +114,7 @@ curl -X DELETE http://localhost:8080/data.txt
         "shortest_transaction":                 0.00
 ```
 
-#### Post picture png - 100 users - 1min
+#### POST picture - 100 users - 1min
 
 `siege -c 100 -t 1M 'http://localhost:8080/test.png POST ./examples_files/picture.png'`
 
