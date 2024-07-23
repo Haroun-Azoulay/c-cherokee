@@ -7,6 +7,8 @@ void routeRequest(int sock, const char *method, const char *path, const char *bo
     printf("routeRequest: Method %s - Path %s - Socket %d\n", method, path, sock);
     if (strcmp(method, "GET") == 0) {
         handleRead(sock, path);
+    } else if (strcmp(method, "HEAD") == 0) {
+        handleHeader(sock, path);
     } else if (strcmp(method, "POST") == 0) {
         handlePost(sock, path, body);
     } else if (strcmp(method, "PUT") == 0) {

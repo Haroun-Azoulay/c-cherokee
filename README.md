@@ -5,7 +5,12 @@ Project of master is to implement a server conforming to a simplified version of
 ### Architecture about server Htpp
 
 ![Sequence Diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/Haroun-Azoulay/c_cherokee/main/sequence_diagram.puml)
-        
+
+## Screen
+
+![Cover](https://github.com/Haroun-Azoulay/c_cherokee/blob/main/img/cherokee.png)
+![Cover](https://github.com/Haroun-Azoulay/c_cherokee/blob/main/img/cherokee-test.png)
+
 ## 🛠️ Tech Stack
 
 - [C++](https://isocpp.org/)
@@ -43,17 +48,26 @@ You can use the following commands:
 curl http://localhost:8080/index.html
 ```
 
+- Header request to retrieve only the headers of index.html
+
+```bash
+curl -I http://localhost:8080/index.html
+```
+
 - POST request to create or update data.txt
+
 ```bash
 curl -X POST -d 'This is some data' http://localhost:8080/data.txt
 ```
 
 - PUT request to update data.txt
+
 ```bash
 curl -X PUT -d 'This is updated data' http://localhost:8080/data.txt
 ```
 
 - DELETE request to remove data.txt
+
 ```bash
 curl -X DELETE http://localhost:8080/data.txt
 ```
@@ -63,6 +77,7 @@ curl -X DELETE http://localhost:8080/data.txt
 #### GET - 10 users - 1min
 
 `siege -c 10 -t 1M http://localhost:8080`
+
 ```
         "transactions":                       430897,
         "availability":                       100.00,
@@ -81,6 +96,7 @@ curl -X DELETE http://localhost:8080/data.txt
 #### GET - 100 users - 1min
 
 `siege -c 100 -t 1M http://localhost:8080`
+
 ```
         "transactions":                       447840,
         "availability":                       100.00,
@@ -99,6 +115,7 @@ curl -X DELETE http://localhost:8080/data.txt
 #### POST file txt - 100 users - 1min
 
 `siege -c 50 -t 1M 'http://localhost:8080/test.txt POST "test dummy"'`
+
 ```
         "transactions":                       419179,
         "availability":                       100.00,
@@ -149,11 +166,16 @@ curl -X DELETE http://localhost:8080/data.txt
         "longest_transaction":                  3.05,
         "shortest_transaction":                 0.00
 ```
-## ❤️ Support  
+## ❤️ Support
+
 A simple star to this project repo is enough to keep me motivated on this project for days. If you find your self very much excited with this project let me know with a tweet.
 
 ## 🙇 Author
+
 #### Cedric Chau
+
 - Github: [@cchaud8](https://github.com/cchau8)
+
 #### Haroun Azoulay
+
 - Github: [@Haroun-Azoulay](https://github.com/Haroun-Azoulay)

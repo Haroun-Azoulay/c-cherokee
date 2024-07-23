@@ -12,7 +12,8 @@
 #define ROOT_DIR "www"
 #define ROOT_DIR_ACCESS "www/api"
 
-void sendResponse(int sock, const char *status, const char *content_type, const char *body) {
+void sendResponse(int sock, const char *status, const char *content_type, const char *body)
+{
     char response[BUFFER_SIZE];
     int content_length = body ? strlen(body) : 0;
 
@@ -28,22 +29,31 @@ void sendResponse(int sock, const char *status, const char *content_type, const 
     send(sock, response, strlen(response), 0);
 }
 
-const char *getContentType(const char *path) {
+const char *getContentType(const char *path)
+{
     const char *ext = strrchr(path, '.');
-    if (!ext) return "application/octet-stream";
+    if (!ext)
+        return "application/octet-stream";
 
-    if (strcmp(ext, ".html") == 0) return "text/html";
-    if (strcmp(ext, ".txt") == 0) return "text/plain";
-    if (strcmp(ext, ".json") == 0) return "application/json";
-    if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0) return "image/jpeg";
-    if (strcmp(ext, ".png") == 0) return "image/png";
+    if (strcmp(ext, ".html") == 0)
+        return "text/html";
+    if (strcmp(ext, ".txt") == 0)
+        return "text/plain";
+    if (strcmp(ext, ".json") == 0)
+        return "application/json";
+    if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0)
+        return "image/jpeg";
+    if (strcmp(ext, ".png") == 0)
+        return "image/png";
 
     return "application/octet-stream";
 }
 
-void serveFile(int sock, const char *path) {
+void serveFile(int sock, const char *path)
+{
     FILE *file = fopen(path, "rb");
-    if (!file) {
+    if (!file)
+    {
         sendResponse(sock, "404 Not Found", "text/plain", "404 Not Found");
         return;
     }
@@ -65,16 +75,19 @@ void serveFile(int sock, const char *path) {
 
     char buffer[BUFFER_SIZE];
     size_t n;
-    while ((n = fread(buffer, 1, sizeof(buffer), file)) > 0) {
+    while ((n = fread(buffer, 1, sizeof(buffer), file)) > 0)
+    {
         send(sock, buffer, n, 0);
     }
 
     fclose(file);
 }
 
-void listDirectory(int sock, const char *path) {
+void listDirectory(int sock, const char *path)
+{
     DIR *dir = opendir(path);
-    if (!dir) {
+    if (!dir)
+    {
         sendResponse(sock, "404 Not Found", "text/plain", "404 Not Found. You don't have folder www.");
         return;
     }
@@ -82,16 +95,21 @@ void listDirectory(int sock, const char *path) {
     struct dirent *entry;
     char body[BUFFER_SIZE] = "<html><body><ul>";
 
-    while ((entry = readdir(dir)) != NULL) {
-        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+    while ((entry = readdir(dir)) != NULL)
+    {
+        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+        {
             char fullpath[BUFFER_SIZE];
             snprintf(fullpath, sizeof(fullpath), "%s/%s", path, entry->d_name);
             struct stat st;
             stat(fullpath, &st);
 
-            if (S_ISDIR(st.st_mode)) {
+            if (S_ISDIR(st.st_mode))
+            {
                 strcat(body, "<li><b>[DIR]</b> ");
-            } else {
+            }
+            else
+            {
                 strcat(body, "<li>");
             }
             strcat(body, entry->d_name);
@@ -104,32 +122,64 @@ void listDirectory(int sock, const char *path) {
     sendResponse(sock, "200 OK", "text/html", body);
 }
 
-void handleRead(int sock, const char *path) {
+void handleRead(int sock, const char *path)
+{
     printf("handleRead: Socket %d - Reading path %s\n", sock, path);
 
     char fullpath[BUFFER_SIZE];
     snprintf(fullpath, sizeof(fullpath), "%s%s", ROOT_DIR_ACCESS, path);
 
     struct stat st;
-    if (stat(fullpath, &st) < 0) {
+    if (stat(fullpath, &st) < 0)
+    {
         sendResponse(sock, "404 Not Found", "text/plain", "404 Not Found");
-    } else {
-        if (S_ISDIR(st.st_mode)) {
+    }
+    else
+    {
+        if (S_ISDIR(st.st_mode))
+        {
             listDirectory(sock, fullpath);
-        } else {
+        }
+        else
+        {
             serveFile(sock, fullpath);
         }
     }
 }
 
-void handlePost(int sock, const char *path, const char *body) {
+void handleHeader(int sock, const char *path)
+{
+    printf("handleHeader: Socket %d - Header path %s\n", sock, path);
+
+    char fullpath[BUFFER_SIZE];
+    snprintf(fullpath, sizeof(fullpath), "%s%s", ROOT_DIR_ACCESS, path);
+
+    struct stat st;
+    if (stat(fullpath, &st) < 0)
+    {
+        char header[BUFFER_SIZE];
+        snprintf(header, sizeof(header), "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: 0\r\nConnection: close\r\n\r\n");
+        send(sock, header, strlen(header), 0);
+    }
+    else
+    {
+        const char *contentType = getContentType(fullpath);
+        char header[BUFFER_SIZE];
+        snprintf(header, sizeof(header), "HTTP/1.1 200 OK\r\nContent-Type: %s\r\nContent-Length: %ld\r\nConnection: close\r\n\r\n", contentType, st.st_size);
+        send(sock, header, strlen(header), 0);
+    }
+}
+
+void handlePost(int sock, const char *path, const char *body)
+{
     printf("handlePost: Socket %d - Creating file %s\n", sock, path);
 
     char fullpath[BUFFER_SIZE];
     snprintf(fullpath, sizeof(fullpath), "%s%s", ROOT_DIR_ACCESS, path);
 
     FILE *file = fopen(fullpath, "wb");
-    if (!file) {
+    if (!file)
+    {
         sendResponse(sock, "500 Internal Server Error", "text/plain", "500 Internal Server Error");
         return;
     }
@@ -140,14 +190,16 @@ void handlePost(int sock, const char *path, const char *body) {
     sendResponse(sock, "201 Created", "application/json", "{\"message\": \"File created\"}");
 }
 
-void handlePut(int sock, const char *path, const char *body) {
+void handlePut(int sock, const char *path, const char *body)
+{
     printf("handlePut: Socket %d - Updating file %s\n", sock, path);
 
     char fullpath[BUFFER_SIZE];
     snprintf(fullpath, sizeof(fullpath), "%s%s", ROOT_DIR_ACCESS, path);
 
     FILE *file = fopen(fullpath, "wb");
-    if (!file) {
+    if (!file)
+    {
         sendResponse(sock, "500 Internal Server Error", "text/plain", "500 Internal Server Error");
         return;
     }
@@ -158,16 +210,19 @@ void handlePut(int sock, const char *path, const char *body) {
     sendResponse(sock, "200 OK", "application/json", "{\"message\": \"File updated\"}");
 }
 
-void handleDelete(int sock, const char *path) {
+void handleDelete(int sock, const char *path)
+{
     printf("handleDelete: Socket %d - Deleting file %s\n", sock, path);
 
     char fullpath[BUFFER_SIZE];
     snprintf(fullpath, sizeof(fullpath), "%s%s", ROOT_DIR_ACCESS, path);
 
-    if (remove(fullpath) == 0) {
+    if (remove(fullpath) == 0)
+    {
         sendResponse(sock, "200 OK", "application/json", "{\"message\": \"File deleted\"}");
-    } else {
+    }
+    else
+    {
         sendResponse(sock, "404 Not Found", "text/plain", "404 Not Found");
     }
 }
-

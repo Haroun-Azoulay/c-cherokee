@@ -98,6 +98,37 @@ Test(Server, HandleRead) {
     cleanup_test_environment();
 }
 
+Test(Server, HandleHeader) {
+    std::cout << "Running HandleHeader test..." << std::endl;
+
+    setup_test_environment();
+
+    int sockfd[2];
+    cr_assert(socketpair(AF_UNIX, SOCK_STREAM, 0, sockfd) == 0, "Failed to create socket pair");
+
+    routeRequest(sockfd[0], "HEAD", "/data.json", NULL);
+
+    char buffer[BUFFER_SIZE];
+    ssize_t bytes_read = read_all(sockfd[1], buffer, sizeof(buffer));
+
+    std::cout << "Bytes read: " << bytes_read << std::endl;
+    std::cout << "Buffer content: " << std::string(buffer, bytes_read) << std::endl;
+
+    close(sockfd[0]);
+
+    const char *expected_response =
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: application/json\r\n"
+        "Content-Length: 19\r\n"
+        "Connection: close\r\n\r\n";
+
+    cr_assert_eq(bytes_read, (ssize_t)strlen(expected_response), "Expected %zu bytes but got %zu bytes",
+                 strlen(expected_response), bytes_read);
+    cr_assert(memcmp(buffer, expected_response, bytes_read) == 0, "Response does not match expected value");
+
+    cleanup_test_environment();
+}
+
 Test(Server, HandlePost) {
     std::cout << "Running HandlePost test..." << std::endl;
 
