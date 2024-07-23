@@ -4,9 +4,11 @@ Project of master is to implement a server conforming to a simplified version of
 
 ### Architecture about server Htpp
 
-![Sequence Diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/Haroun-Azoulay/c_cherokee/main/sequence_diagram.puml)
+<!-- ![Sequence Diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/Haroun-Azoulay/c_cherokee/main/sequence_diagram.puml) -->
 
-## Screen
+![Cover](https://github.com/Haroun-Azoulay/c_cherokee/blob/main/img/sequence_diagram.png)
+
+## Screens
 
 ![Cover](https://github.com/Haroun-Azoulay/c_cherokee/blob/main/img/cherokee.png)
 ![Cover](https://github.com/Haroun-Azoulay/c_cherokee/blob/main/img/cherokee-test.png)

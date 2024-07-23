@@ -19,6 +19,11 @@ group GET request
     Thread -> Thread: Process request (synchronous, new_socket)
     Thread -> Client: Send response (new_socket)
 end
+group Header request
+    Thread -> Thread: Read request (GET, new_socket)
+    Thread -> Thread: Process request (synchronous, new_socket)
+    Thread -> Client: Send response (new_socket)
+end
 group POST request
     Thread -> Thread: Read request (POST, new_socket)
     Thread -> Thread: Process request (synchronous, new_socket)
