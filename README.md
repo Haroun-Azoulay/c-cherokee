@@ -167,7 +167,16 @@ curl -X DELETE http://localhost:8080/data.txt
         "failed_transactions":                     0,
         "longest_transaction":                  3.05,
         "shortest_transaction":                 0.00
+
 ```
+
+## Performance research
+
+### Thread pools
+
+We also explored the idea to use thread pools to see if we could improve the performance.
+Thread pools are a concurrency pattern used to manage a collection of threads instead of creating and destroying threads for each request, the thread pool will maintain a pool of set threads that can be reused. We thought we would see gains in performance and more efficient ressource usage, but in the end we got mixed results and the complexity added made it so that we decided not to use thread pools for our server. This idea might need some more experimenting but we decided to stick for a simpler thread per request model for our server for stability in performance.
+
 ## ❤️ Support
 
 A simple star to this project repo is enough to keep me motivated on this project for days. If you find your self very much excited with this project let me know with a tweet.
